@@ -16,6 +16,8 @@ void testPV();
 void testPerpetuity();
 void testIRR();
 void testYTM();
+void testDuration();
+void testMacDuration();
 void testContRateConversion();
 void testDiscRateConversion();
 

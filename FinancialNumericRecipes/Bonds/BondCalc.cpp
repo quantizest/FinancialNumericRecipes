@@ -2,6 +2,7 @@
 
 double getPV(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, double rate_, RateType rateType_)
 {
+    utils::sanityCheck(rate_, cfTimes_, cfAmts_);
     switch (rateType_) {
         case RateType::DISCRETE:
             return getPVForDiscreteRates(cfTimes_, cfAmts_, rate_);;
@@ -14,7 +15,6 @@ double getPV(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, double rate_, 
 
 double getPVForDiscreteRates(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, double rate_)
 {
-    utils::sanityCheck(rate_, cfTimes_,cfAmts_);
     double ret = 0.;
     for (int i = 0; i < cfTimes_.size(); ++i)
         ret += cfAmts_[i] / pow(1.0 + rate_, cfTimes_[i]);
@@ -23,7 +23,6 @@ double getPVForDiscreteRates(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_
 
 double getPVForContRates(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, double rate_)
 {
-    utils::sanityCheck(rate_, cfTimes_,cfAmts_);
     double ret = 0.;
     for (int i = 0; i < cfTimes_.size(); ++i)
         ret += cfAmts_[i] * exp(-rate_ * cfTimes_[i]);
@@ -80,6 +79,7 @@ Interval getBracketedRange(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_)
 
 double getYTMDiscrete(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, double bondDirtyPrice_)
 {
+    utils::sanityCheck(cfTimes_, cfAmts_);
     constexpr int maxIterations = 200;
     double low = 0., high = 1.;
     double mid = (low + high) / 2;
@@ -92,6 +92,23 @@ double getYTMDiscrete(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, doubl
         mid = (low + high) / 2;
     }
     return mid;
+}
+
+double getDuration(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, double rate_)
+{
+    double num = 0., denom = 0.;
+    for (int i = 0; i < cfTimes_.size(); ++i) {
+        num += cfTimes_[i] * cfAmts_[i] / pow(1 + rate_, cfTimes_[i]);
+    }
+    denom = getPV(cfTimes_, cfAmts_, rate_);
+    if (denom == 0.) throw ("Zero PV! Can't calc duration ");
+    return num / denom;
+}
+
+double getMacDuration(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, double bondDirtyPrice_)
+{
+    double yield = getYTMDiscrete(cfTimes_, cfAmts_, bondDirtyPrice_);
+    return getDuration(cfTimes_, cfAmts_, yield);
 }
 
 double utils::getContRate(double discreteRate_, int numPeriods_)

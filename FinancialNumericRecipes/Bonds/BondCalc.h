@@ -32,6 +32,12 @@ Interval getBracketedRange(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_);
 //Uses simple binary search - guaranteed to have a solution unlike IRR
 double getYTMDiscrete(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, double bondDirtyPrice_);
 
+//Duration and Convexity
+//Time weighted average of cfs
+double getDuration(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, double rate_);
+//Uses yield instead of rate in figuring out duration
+double getMacDuration(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, double bondDirtyPrice_);
+
 namespace utils {
 double getContRate(double discreteRate_, int numPeriods_ = 1);
 double getDiscreteRate(double contRate_, int numPeriods_ = 1);
