@@ -9,9 +9,11 @@
 #ifndef BondTest_h
 #define BondTest_h
 #include "BondCalc.h"
+#include <iostream>
 
 void testBonds();
 void testPV();
 void testPerpetuity();
+void testIRR();
 
 #endif /* BondTest_h */
