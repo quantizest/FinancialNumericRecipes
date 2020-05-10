@@ -7,6 +7,7 @@ void testBonds()
     testPV();
     testPerpetuity();
     testIRR();
+    testYTM();
     testContRateConversion();
     testDiscRateConversion();
 }
@@ -34,6 +35,16 @@ void testIRR()
     DoubleVec times = {0, 1, 2};
     auto ret = getIRR(times, cf);
     assert(fabs(ret - 0.1) < eps);
+}
+
+void testYTM()
+{
+    DoubleVec cf = { 10, 10, 110};
+    DoubleVec times = { 1, 2, 3};
+    double r = 0.09;
+    auto bp = getPV(times, cf, r);
+    auto ret = getYTMDiscrete(times, cf, bp);
+    assert(fabs(ret - 0.09) < eps);
 }
 
 void testContRateConversion()

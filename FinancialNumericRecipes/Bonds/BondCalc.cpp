@@ -78,6 +78,22 @@ Interval getBracketedRange(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_)
     return {x0, x1};
 }
 
+double getYTMDiscrete(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, double bondDirtyPrice_)
+{
+    constexpr int maxIterations = 200;
+    double low = 0., high = 1.;
+    double mid = (low + high) / 2;
+    for (int i = 0; i < maxIterations; ++i)
+    {
+        double diff = getPV(cfTimes_, cfAmts_, mid) - bondDirtyPrice_;
+        if (fabs(diff) < eps) break;
+        else if (diff > 0.) low = mid;
+        else high = mid;
+        mid = (low + high) / 2;
+    }
+    return mid;
+}
+
 double utils::getContRate(double discreteRate_, int numPeriods_)
 {
     sanityCheck(discreteRate_);

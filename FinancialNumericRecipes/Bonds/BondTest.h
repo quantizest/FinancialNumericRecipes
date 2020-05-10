@@ -15,6 +15,7 @@ void testBonds();
 void testPV();
 void testPerpetuity();
 void testIRR();
+void testYTM();
 void testContRateConversion();
 void testDiscRateConversion();
 

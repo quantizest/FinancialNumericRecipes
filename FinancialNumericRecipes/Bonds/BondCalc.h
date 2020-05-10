@@ -29,6 +29,8 @@ double getPVPerpetuity(double fixedCF_, double rate_);
 double getIRR(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_);
 // Return a range of interest rates within which the PV changes sign
 Interval getBracketedRange(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_);
+//Uses simple binary search - guaranteed to have a solution unlike IRR
+double getYTMDiscrete(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, double bondDirtyPrice_);
 
 namespace utils {
 double getContRate(double discreteRate_, int numPeriods_ = 1);
