@@ -16,7 +16,7 @@ void testPV()
     DoubleVec cf = {-100, 75, 75};
     DoubleVec times = {0, 1, 2};
     double rate = 0.1;
-    auto ret = getPVSimple(times, cf, rate);
+    auto ret = getPV(times, cf, rate);
     assert(fabs(ret - 30.165289) < eps);
 }
 

@@ -18,7 +18,11 @@ using Interval = std::pair<double, double>; //[x0, x1]
 constexpr double eps = 1e-6;
 constexpr double ERROR_VAL = std::numeric_limits<double>::max();
 
-double getPVSimple(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, double rate_);
+enum class RateType { DISCRETE, CONTINOUS };
+
+double getPV(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, double rate_, RateType rateType_ = RateType::DISCRETE);
+double getPVForDiscreteRates(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, double rate_);
+double getPVForContRates(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, double rate_);
 double getPVPerpetuity(double fixedCF_, double rate_);
 // TODO: Pass a function obj for the below 2 methods
 // IRR is the rate at which the net PV of all cash flows is 0
