@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		279C5CC2246803C700FEB0F1 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 279C5CC1246803C700FEB0F1 /* main.cpp */; };
+		279C5CCB246806DF00FEB0F1 /* BondInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 279C5CCA246806DF00FEB0F1 /* BondInfo.cpp */; };
+		279C5CCD246807C700FEB0F1 /* BondCalc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 279C5CCC246807C700FEB0F1 /* BondCalc.cpp */; };
+		279C5CCF2468097F00FEB0F1 /* BondsTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 279C5CCE2468097F00FEB0F1 /* BondsTest.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +28,11 @@
 /* Begin PBXFileReference section */
 		279C5CBE246803C700FEB0F1 /* FinancialNumericRecipes */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = FinancialNumericRecipes; sourceTree = BUILT_PRODUCTS_DIR; };
 		279C5CC1246803C700FEB0F1 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		279C5CCA246806DF00FEB0F1 /* BondInfo.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BondInfo.cpp; sourceTree = "<group>"; };
+		279C5CCC246807C700FEB0F1 /* BondCalc.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BondCalc.cpp; sourceTree = "<group>"; };
+		279C5CCE2468097F00FEB0F1 /* BondsTest.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BondsTest.cpp; sourceTree = "<group>"; };
+		279C5CD024680DE900FEB0F1 /* BondCalc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BondCalc.h; sourceTree = "<group>"; };
+		279C5CD124680E6100FEB0F1 /* BondTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BondTest.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,9 +65,22 @@
 		279C5CC0246803C700FEB0F1 /* FinancialNumericRecipes */ = {
 			isa = PBXGroup;
 			children = (
+				279C5CC9246806B900FEB0F1 /* Bonds */,
 				279C5CC1246803C700FEB0F1 /* main.cpp */,
 			);
 			path = FinancialNumericRecipes;
+			sourceTree = "<group>";
+		};
+		279C5CC9246806B900FEB0F1 /* Bonds */ = {
+			isa = PBXGroup;
+			children = (
+				279C5CCE2468097F00FEB0F1 /* BondsTest.cpp */,
+				279C5CD124680E6100FEB0F1 /* BondTest.h */,
+				279C5CCC246807C700FEB0F1 /* BondCalc.cpp */,
+				279C5CD024680DE900FEB0F1 /* BondCalc.h */,
+				279C5CCA246806DF00FEB0F1 /* BondInfo.cpp */,
+			);
+			path = Bonds;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -119,6 +140,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				279C5CCF2468097F00FEB0F1 /* BondsTest.cpp in Sources */,
+				279C5CCB246806DF00FEB0F1 /* BondInfo.cpp in Sources */,
+				279C5CCD246807C700FEB0F1 /* BondCalc.cpp in Sources */,
 				279C5CC2246803C700FEB0F1 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -132,7 +156,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -164,7 +188,7 @@
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_NO_COMMON_BLOCKS = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -190,7 +214,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -221,7 +245,7 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_NO_COMMON_BLOCKS = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
