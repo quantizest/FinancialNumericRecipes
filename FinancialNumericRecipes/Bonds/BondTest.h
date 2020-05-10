@@ -15,5 +15,7 @@ void testBonds();
 void testPV();
 void testPerpetuity();
 void testIRR();
+void testContRateConversion();
+void testDiscRateConversion();
 
 #endif /* BondTest_h */

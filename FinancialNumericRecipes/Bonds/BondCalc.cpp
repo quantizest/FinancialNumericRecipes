@@ -2,7 +2,7 @@
 
 double getPVSimple(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, double rate_)
 {
-    sanityCheck(rate_, cfTimes_,cfAmts_);
+    utils::sanityCheck(rate_, cfTimes_,cfAmts_);
     double ret = 0.;
     for (int i = 0; i < cfTimes_.size(); ++i)
         ret += cfAmts_[i] / pow(1.0 + rate_, cfTimes_[i]);
@@ -11,13 +11,13 @@ double getPVSimple(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, double r
 
 double getPVPerpetuity(double fixedCF_, double rate_)
 {
-    sanityCheck(rate_);
+    utils::sanityCheck(rate_);
     return fixedCF_ / 1 + rate_;
 }
 
 double getIRR(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_)
 {
-    sanityCheck(cfTimes_, cfAmts_);
+    utils::sanityCheck(cfTimes_, cfAmts_);
     auto [x0, x1] = getBracketedRange(cfTimes_, cfAmts_);
     auto f = getPVSimple(cfTimes_, cfAmts_, x0);
     double rtb = 0., dx = 0.;
@@ -57,18 +57,32 @@ Interval getBracketedRange(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_)
     return {x0, x1};
 }
 
-void sanityCheck(double rate_, const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, bool checkRate_)
+void utils::sanityCheck(double rate_, const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, bool checkRate_)
 {
-    if (rate_ == 0. && checkRate_) throw("0 rate supplied\n");
+    if ((rate_ == 0.  || rate_ <= -1.) && checkRate_) throw("0 rate supplied\n");
     if (cfTimes_.size() != cfAmts_.size()) throw("Cashflow vector and schedule have different sizes ");
 }
 
-void sanityCheck(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_)
+void utils::sanityCheck(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_)
 {
     sanityCheck(0, cfTimes_, cfAmts_);
 }
 
-void sanityCheck(double rate_)
+void utils::sanityCheck(double rate_)
 {
     sanityCheck(rate_, {}, {}, true);
+}
+
+double utils::getContRate(double discreteRate_, int numPeriods_)
+{
+    sanityCheck(discreteRate_);
+    if (numPeriods_ == 0.) throw ("0 Num of periods specified ");
+    return numPeriods_ * log(1 + discreteRate_ / numPeriods_);
+}
+
+double utils::getDiscreteRate(double contRate_, int numPeriods_)
+{
+    sanityCheck(contRate_);
+    if (numPeriods_ == 0.) throw ("0 Num of periods specified ");
+    return numPeriods_ * (exp(contRate_ / numPeriods_) - 1);
 }
