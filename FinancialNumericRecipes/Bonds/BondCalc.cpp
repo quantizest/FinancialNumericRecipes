@@ -111,6 +111,24 @@ double getMacDuration(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, doubl
     return getDuration(cfTimes_, cfAmts_, yield);
 }
 
+double getModifiedDuration(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, double bondDirtyPrice_)
+{
+    //Can't reuse MacDarution as yield is requied
+    // MacDuration / 1 + y
+    double yield = getYTMDiscrete(cfTimes_, cfAmts_, bondDirtyPrice_);
+    double duration = getDuration(cfTimes_, cfAmts_, yield);
+    return duration / (1 + yield);
+}
+
+double getConvexity(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, double rate_)
+{
+    double conv = 0.;
+    for (int i = 0; i < cfTimes_.size(); ++i)
+        conv += cfTimes_[i] * (1 + cfTimes_[i]) * cfAmts_[i] / pow(1 + rate_, cfTimes_[i]);
+    double pv = getPV(cfTimes_, cfAmts_, rate_);
+    return conv / (pv * (1 + rate_) * (1 + rate_));
+}
+
 double utils::getContRate(double discreteRate_, int numPeriods_)
 {
     sanityCheck(discreteRate_);

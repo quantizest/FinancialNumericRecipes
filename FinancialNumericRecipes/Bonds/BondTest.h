@@ -18,6 +18,8 @@ void testIRR();
 void testYTM();
 void testDuration();
 void testMacDuration();
+void testModifiedDuration();
+void testConvexity();
 void testContRateConversion();
 void testDiscRateConversion();
 

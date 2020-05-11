@@ -37,6 +37,9 @@ double getYTMDiscrete(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, doubl
 double getDuration(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, double rate_);
 //Uses yield instead of rate in figuring out duration
 double getMacDuration(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, double bondDirtyPrice_);
+//Uses yield
+double getModifiedDuration(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, double bondDirtyPrice_);
+double getConvexity(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, double rate_);
 
 namespace utils {
 double getContRate(double discreteRate_, int numPeriods_ = 1);

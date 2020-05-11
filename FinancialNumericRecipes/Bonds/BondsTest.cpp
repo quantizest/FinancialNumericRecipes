@@ -10,6 +10,8 @@ void testBonds()
     testYTM();
     testDuration();
     testMacDuration();
+    testModifiedDuration();
+    testConvexity();
     testContRateConversion();
     testDiscRateConversion();
 }
@@ -66,6 +68,25 @@ void testMacDuration()
     auto bp = getPV(times, cf, r);
     auto ret = getMacDuration(times, cf, bp);
     assert(fabs(ret - 2.7389536) < eps);
+}
+
+void testModifiedDuration()
+{
+    DoubleVec cf = { 10, 10, 110};
+    DoubleVec times = { 1, 2, 3};
+    double r = 0.09;
+    auto bp = getPV(times, cf, r);
+    auto ret = getModifiedDuration(times, cf, bp);
+    assert(fabs(ret - 2.51280147) < eps);
+}
+
+void testConvexity()
+{
+    DoubleVec cf = { 10, 10, 110};
+    DoubleVec times = { 1, 2, 3};
+    double r = 0.09;
+    auto ret = getConvexity(times, cf, r);
+    assert(fabs(ret - 8.93247876) < eps);
 }
 
 void testContRateConversion()
