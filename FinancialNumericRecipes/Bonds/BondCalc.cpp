@@ -1,41 +1,32 @@
 #include "BondCalc.h"
 
-double getPV(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, double rate_, RateType rateType_)
+double BondCalc::getDiscFactor(double rate_, double time_)
 {
-    utils::sanityCheck(rate_, cfTimes_, cfAmts_);
-    switch (rateType_) {
+   switch (_rateType) {
         case RateType::DISCRETE:
-            return getPVForDiscreteRates(cfTimes_, cfAmts_, rate_);;
+            return 1 / pow(1.0 + rate_, time_);
         case RateType::CONTINOUS:
-            return getPVForContRates(cfTimes_, cfAmts_, rate_);;
+            return exp(-rate_ * time_);
         default:
             break;
     }
 }
 
-double getPVForDiscreteRates(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, double rate_)
+double BondCalc::getPV(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, double rate_)
 {
     double ret = 0.;
     for (int i = 0; i < cfTimes_.size(); ++i)
-        ret += cfAmts_[i] / pow(1.0 + rate_, cfTimes_[i]);
+        ret += cfAmts_[i] * getDiscFactor(rate_, cfTimes_[i]);
     return ret;
 }
 
-double getPVForContRates(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, double rate_)
-{
-    double ret = 0.;
-    for (int i = 0; i < cfTimes_.size(); ++i)
-        ret += cfAmts_[i] * exp(-rate_ * cfTimes_[i]);
-    return ret;
-}
-
-double getPVPerpetuity(double fixedCF_, double rate_)
+double BondCalc::getPVPerpetuity(double fixedCF_, double rate_)
 {
     utils::sanityCheck(rate_);
-    return fixedCF_ / 1 + rate_;
+    return (rate_ != 0.) ? fixedCF_ / rate_ : 0.;
 }
 
-double getIRR(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_)
+double BondCalc::getIRR(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_)
 {
     utils::sanityCheck(cfTimes_, cfAmts_);
     auto [x0, x1] = getBracketedRange(cfTimes_, cfAmts_);
@@ -61,23 +52,23 @@ double getIRR(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_)
     return ERROR_VAL;
 }
 
-Interval getBracketedRange(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_)
+Interval BondCalc::getBracketedRange(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_)
 {
     //Taken from Numerical Recipes Chapter 9 on Bisection
-    double x0 = 0., x1 = 2.; //0 - 20 % permissible range, should be passed as an arg_
+    double x0 = 0., x1 = 2.; //0 - 200 % permissible range, should be passed as an arg_
     constexpr double maxIterations = 50;
     auto f1 = getPV(cfTimes_, cfAmts_, x0);
     auto f2 = getPV(cfTimes_, cfAmts_, x1);
     for (int i = 0; i< maxIterations; ++i) {
         if (f1 * f2 < 0.) break;
         if (fabs(f1) < fabs(f2)) f1 = getPV(cfTimes_, cfAmts_, x0 += 1.6 * (x0 - x1));
-        else f2 = getPV(cfTimes_, cfAmts_, x1 += 1.6* (x1 - x0));
+        else f2 = getPV(cfTimes_, cfAmts_, x1 += 1.6 * (x1 - x0));
     }
     if (f1 * f2 > 0.) throw ("Unable to find a bracket for IRR ");
     return {x0, x1};
 }
 
-double getYTMDiscrete(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, double bondDirtyPrice_)
+double BondCalc::getYTMDiscrete(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, double bondDirtyPrice_)
 {
     utils::sanityCheck(cfTimes_, cfAmts_);
     constexpr int maxIterations = 200;
@@ -94,24 +85,24 @@ double getYTMDiscrete(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, doubl
     return mid;
 }
 
-double getDuration(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, double rate_)
+double BondCalc::getDuration(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, double rate_)
 {
     double num = 0., denom = 0.;
     for (int i = 0; i < cfTimes_.size(); ++i) {
-        num += cfTimes_[i] * cfAmts_[i] / pow(1 + rate_, cfTimes_[i]);
+        num += cfTimes_[i] * cfAmts_[i] * getDiscFactor(rate_, cfTimes_[i]);
     }
     denom = getPV(cfTimes_, cfAmts_, rate_);
     if (denom == 0.) throw ("Zero PV! Can't calc duration ");
     return num / denom;
 }
 
-double getMacDuration(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, double bondDirtyPrice_)
+double BondCalc::getMacDuration(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, double bondDirtyPrice_)
 {
     double yield = getYTMDiscrete(cfTimes_, cfAmts_, bondDirtyPrice_);
     return getDuration(cfTimes_, cfAmts_, yield);
 }
 
-double getModifiedDuration(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, double bondDirtyPrice_)
+double BondCalc::getModifiedDuration(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, double bondDirtyPrice_)
 {
     //Can't reuse MacDarution as yield is requied
     // MacDuration / 1 + y
@@ -120,13 +111,15 @@ double getModifiedDuration(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, 
     return duration / (1 + yield);
 }
 
-double getConvexity(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, double rate_)
+double BondCalc::getConvexity(const DoubleVec& cfTimes_, const DoubleVec& cfAmts_, double rate_)
 {
     double conv = 0.;
+    bool isCont = (_rateType == RateType::CONTINOUS);
     for (int i = 0; i < cfTimes_.size(); ++i)
-        conv += cfTimes_[i] * (1 + cfTimes_[i]) * cfAmts_[i] / pow(1 + rate_, cfTimes_[i]);
+        conv += cfTimes_[i] * ( isCont ? (cfTimes_[i]) : 1 + cfTimes_[i]) * cfAmts_[i] * getDiscFactor(rate_, cfTimes_[i]);
     double pv = getPV(cfTimes_, cfAmts_, rate_);
-    return conv / (pv * (1 + rate_) * (1 + rate_));
+    if (!isCont) pv *= (1 + rate_) * (1 + rate_);
+    return conv / pv ;
 }
 
 double utils::getContRate(double discreteRate_, int numPeriods_)

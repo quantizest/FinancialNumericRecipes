@@ -11,7 +11,8 @@
 int main(int argc, const char * argv[]) {
     // insert code here...
     try {
-        testBonds();
+        BondTest bondTests;
+        bondTests.testBonds();
         std::cout << "Tests ran succesfully!\n";
     }
     catch(const std::exception& e_){

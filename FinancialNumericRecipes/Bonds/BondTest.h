@@ -11,16 +11,28 @@
 #include "BondCalc.h"
 #include <iostream>
 
-void testBonds();
-void testPV();
-void testPerpetuity();
-void testIRR();
-void testYTM();
-void testDuration();
-void testMacDuration();
-void testModifiedDuration();
-void testConvexity();
-void testContRateConversion();
-void testDiscRateConversion();
+class BondTest {
+    
+public:
+    void testBonds();
+    
+private:
+    void testPV();
+    void testPVCont();
+    void testPerpetuity();
+    void testIRR();
+    void testYTM();
+    void testDuration();
+    void testMacDuration();
+    void testModifiedDuration();
+    void testDurationCont();
+    void testConvexity();
+    void testConvexityCont();
+    void testContRateConversion();
+    void testDiscRateConversion();
+
+private:
+    BondCalc bondCalc;
+};
 
 #endif /* BondTest_h */
